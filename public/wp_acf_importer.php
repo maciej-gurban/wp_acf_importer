@@ -51,7 +51,10 @@ class WP_ACF_Importer {
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
+		add_action( 'wp_acf_importer', array( $this, 'acf_create_field' ) );
+
 	}
+
 
 	/**
 	 * Return the plugin slug.
@@ -240,10 +243,11 @@ class WP_ACF_Importer {
 	 *
 	 * @param	string    	$xml_string    		Contents of the XML file
 	 * @param   bool    	$allow_duplicates   Allows overriding custom post type setting requiring posts to have unique post_name attribute
+	 * @param   bool    	$update_if_exists   Specify whether to overwrite existing post's fields. If true passed, every function run, the post matching post_name will be updated with XML-originating fields
 	 *
 	 * @return 	true|false 						Return TRUE upon successful field creation, and FALSE upon failure	 
 	 */
-	public function acf_create_field( $xml_string, $allow_duplicates = false ) {
+	public function acf_create_field( $xml_string, $allow_duplicates = false, $update_if_exists = false ) {
 
 	    // Parse ACF post's XML
 	    $content = simplexml_load_string( $xml_string, 'SimpleXMLElement', LIBXML_NOCDATA); 
@@ -265,31 +269,41 @@ class WP_ACF_Importer {
 
 	    $the_post = get_page_by_title( $content->channel->item->title, 'OBJECT', 'acf' );
 
-	    # Execute only if doesn't exist already
+	    # Create a new post if doesn't exist
 	    if ( !$the_post || $allow_duplicates == true ) {
 	        $post_id = wp_insert_post( $wp_post_data );
 	    }
+	    # If exists, update post_meta (the actual editable fields created )
 	    else {
 	        $post_id = $the_post->ID;
 	    }
 
-	    $wp_post_meta = $content->channel->item->children( 'wp', true );
+	    # Prevents overwriting if post already exists
+	    if( $update_if_exists === true ) {
 
-	    if( $wp_post_meta ) {
-	        foreach ( $wp_post_meta as $row ) {
+	    	$wp_post_meta = $content->channel->item->children( 'wp', true );
 
-	            // Choose only arrays (postmeta)
-	            if( count($row) > 0) {
-	                // using addlashes on meta values to compensate for stripslashes() that will be run upon import
-	                update_post_meta( $post_id, $row->meta_key, addslashes( $row->meta_value ) );
-	            }
-	        }
-	        return true;
+		    if( $wp_post_meta ) {
+		        foreach ( $wp_post_meta as $row ) {
+		            // Choose only arrays (postmeta)
+		            if( count($row) > 0) {
+		                // using addlashes on meta values to compensate for stripslashes() that will be run upon import
+		                update_post_meta( $post_id, $row->meta_key, addslashes( $row->meta_value ) );
+		            }
+		        }
+		        return true;
+		    }	
 	    }
+
 
 	    return false;
 
 	}
 
 
+
+
+
 } // end of class
+
+
