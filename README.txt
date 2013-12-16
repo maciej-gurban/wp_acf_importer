@@ -51,6 +51,17 @@ The plugin will try to create one new ACF post unless one already exists, and th
 
 Sample code:
 
+    $acf_field = file_get_contents('advanced-custom-field-export.xml');
+            
+    $aim = WP_ACF_Importer();
+    
+    if( $aim->acf_create_field( $acf_field ) ) {
+        echo 'Field created successfully.';
+    }
+    else {
+        echo 'Import failed.';
+    }
+
 
 == Changelog ==
 

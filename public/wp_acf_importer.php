@@ -243,7 +243,7 @@ class WP_ACF_Importer {
 	 *
 	 * @return 	true|false 						Return TRUE upon successful field creation, and FALSE upon failure	 
 	 */
-	public function insert_acf_field( $xml_string, $allow_duplicates = false ) {
+	public function acf_create_field( $xml_string, $allow_duplicates = false ) {
 
 	    // Parse ACF post's XML
 	    $content = simplexml_load_string( $xml_string, 'SimpleXMLElement', LIBXML_NOCDATA); 
