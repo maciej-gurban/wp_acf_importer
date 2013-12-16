@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  *----------------------------------------------------------------------------*/
 
 /*
-    Plugin's class file
+ *  Plugin's class file
  */
 require_once( plugin_dir_path( __FILE__ ) . 'public/wp_acf_importer.php' );
 
