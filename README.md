@@ -34,7 +34,7 @@ Sample code:
             
     $aim = WP_ACF_Importer();
     
-    if( $aim->acf_insert_field( $acf_field ) ) {
+    if( $aim->acf_create_field( $acf_field ) ) {
         echo 'Field created successfully.';
     }
     else {
