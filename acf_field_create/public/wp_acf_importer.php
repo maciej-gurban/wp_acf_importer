@@ -51,16 +51,6 @@ class WP_ACF_Importer {
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
-		// Load public-facing style sheet and JavaScript.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
-		/* Define custom functionality.
-		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-		 */
-		add_action( '@TODO', array( $this, 'action_method_name' ) );
-		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
-
 	}
 
 	/**
@@ -242,6 +232,17 @@ class WP_ACF_Importer {
 
 
 
+
+	/**
+	 * Fired for each blog when the plugin is deactivated.
+	 *
+	 * @since   0.1.1
+	 *
+	 * @param	string    	$xml_string    		Contents of the XML file
+	 * @param   bool    	$allow_duplicates   Allows overriding custom post type setting requiring posts to have unique post_name attribute
+	 *
+	 * @return 	true|false 						Return TRUE upon successful field creation, and FALSE upon failure	 
+	 */
 	public function insert_acf_field( $xml_string, $allow_duplicates = false ) {
 
 	    // Parse ACF post's XML
@@ -282,9 +283,12 @@ class WP_ACF_Importer {
 	                // using addlashes on meta values to compensate for stripslashes() that will be run upon import
 	                update_post_meta( $post_id, $row->meta_key, addslashes( $row->meta_value ) );
 	            }
-
 	        }
+	        return true;
 	    }
+
+	    return false;
+
 	}
 
 
