@@ -1,46 +1,56 @@
 <?php
+/**
+ *
+ * Wordpress ACF importer
+ *
+ * @package   Wordpress ACF importer
+ * @author    Maciej Gurban <maciej.gurban@gmail.com>
+ * @license   GPL-2.0+
+ * @link      https://github.com/maciej-gurban/acf_create_field/
+ * @copyright 2013 Maciej Gurban
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Wordpress ACF importer
+ * Plugin URI:        wp_acf_importer
+ * Description:       ACF (Advanced Custom Fields) importer. Allows programmatical import of XML files containing ACF fields into Wordpress, previously exported by the plugin itself. Expects one ACF field (post of 'acf' post type) at a time.
+ * Version:           0.1.1
+ * Author:            Maciej Gurban
+ * Author URI:        maciej.gurban@gmail.com
+ * Text Domain:       en
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Domain Path:       /languages
+ * GitHub Plugin URI: https://github.com/maciej-gurban/acf_create_field
+ */
 
-function insert_acf_field( $xml_string, $allow_duplicates = false ) {
 
-    // Parse ACF post's XML
-    $content = simplexml_load_string( $xml_string, 'SimpleXMLElement', LIBXML_NOCDATA); 
-
-    // Parse XML post attributes containing fields
-    $wp_post_attributes = $content->channel->item->children('wp', true);
-
-    # Copy basic properties from the exported field
-    $wp_post_data = array(
-        'post_type'   => 'acf',
-        'post_title'  => $content->channel->item->title,
-        'post_name'   => $wp_post_attributes->post_name,
-        'post_status' => 'publish',
-        'post_author' => 1
-
-    );
-
-    $the_post = get_page_by_title($content->channel->item->title, 'OBJECT', 'acf');
-
-    # Execute only if doesn't exist already
-    if ( !$the_post || $allow_duplicates == true ) {
-        $post_id = wp_insert_post( $wp_post_data );
-    }
-    else {
-        $post_id = $the_post->ID;
-    }
-
-    $wp_post_meta = $content->channel->item->children('wp', true);
-
-    if( $wp_post_meta ) {
-        foreach ( $wp_post_meta as $row) {
-
-            // Choose only arrays (postmeta)
-            if( count($row) > 0) {
-                // using addlashes on meta values to compensate for stripslashes() that will be run upon import
-                update_post_meta( $post_id, $row->meta_key, addslashes( $row->meta_value ) );
-            }
-
-        }
-    }
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+    die;
 }
+
+/*----------------------------------------------------------------------------*
+ * Public-Facing Functionality
+ *----------------------------------------------------------------------------*/
+
+/*
+    Plugin's class file
+ */
+require_once( plugin_dir_path( __FILE__ ) . 'public/wp_acf_importer.php' );
+
+/*
+ * Register hooks that are fired when the plugin is activated or deactivated.
+ * When the plugin is deleted, the uninstall.php file is loaded.
+ *
+ * Class name from wp_acf_importer.php
+ */
+register_activation_hook( __FILE__, array( 'WP_ACF_Importer', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'WP_ACF_Importer', 'deactivate' ) );
+
+/*
+ * Class name from wp_acf_importer.php
+ */
+add_action( 'plugins_loaded', array( 'WP_ACF_Importer', 'get_instance' ) );
+
 
 ?>
