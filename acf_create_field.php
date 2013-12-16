@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Wordpress ACF importer
  *
  * @package   Wordpress ACF importer
@@ -9,13 +8,13 @@
  * @link      https://github.com/maciej-gurban/acf_create_field/
  * @copyright 2013 Maciej Gurban
  *
- * @wordpress-plugin
+ * @wp_acf_importer
  * Plugin Name:       Wordpress ACF importer
- * Plugin URI:        wp_acf_importer
+ * Plugin URI:        https://github.com/maciej-gurban/acf_create_field
  * Description:       ACF (Advanced Custom Fields) importer. Allows programmatical import of XML files containing ACF fields into Wordpress, previously exported by the plugin itself. Expects one ACF field (post of 'acf' post type) at a time.
  * Version:           0.1.1
  * Author:            Maciej Gurban
- * Author URI:        maciej.gurban@gmail.com
+ * Author URI:        http://dihdesign.com
  * Text Domain:       en
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -29,6 +28,14 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
+/*
+	This plugin is based upon: 
+	https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate
+	
+	For some insight, visit:
+	http://wp.tutsplus.com/tutorials/creative-coding/design-patterns-in-wordpress-the-singleton-pattern/
+*/
+
 /*----------------------------------------------------------------------------*
  * Public-Facing Functionality
  *----------------------------------------------------------------------------*/
@@ -37,6 +44,7 @@ if ( ! defined( 'WPINC' ) ) {
  *  Plugin's class file
  */
 require_once( plugin_dir_path( __FILE__ ) . 'public/wp_acf_importer.php' );
+
 
 /*
  * Register hooks that are fired when the plugin is activated or deactivated.
