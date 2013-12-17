@@ -3,6 +3,7 @@ WP ACF Importer
 
 The plugin allows programmatical import of XML files containing ACF (Advanced Custom Fields) into Wordpress. It expects one ACF field (post of 'acf' type) at a time. XML syntax expected by the plugin needs to be the output of ACF plugin's export function.
 
+The plugin supports Wordpress Multisite Network.
 
 Installation
 ------------
