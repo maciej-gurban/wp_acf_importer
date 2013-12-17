@@ -1,4 +1,4 @@
-Wordpress ACF Importer
+WP ACF Importer
 ==============
 
 The plugin allows programmatical import of XML files containing ACF (Advanced Custom Fields) into Wordpress. It expects one ACF field (post of 'acf' type) at a time. XML syntax expected by the plugin needs to be the output of ACF plugin's export function.
@@ -49,6 +49,8 @@ Plugin source code extract:
 
     acf_create_field( $xml_string, $allow_duplicates = false, $update_if_exists = false )
 
-1. `$xml_string` (__required__ | `string` | default: `null`) - a string containing the imported XML
-2. `$allow_duplicates` (__optional__ | `true/false` | default: `false`) - decides if to allow creating posts with identical post_name or not
-3. `$update_if_exists` (__optional__ | `true/false` | default: `false`) - decides if to update and overwrite post's meta (sets of fields created to be edited in the back-end) or not
+| Parameter name      | Type     | Default value | Required | Description |
+| ------------------- | -------- | ------------- |:--------:| ----------- |
+| `$xml_string`       | `string` | `null`        | yes      | string containing the imported XML
+| `$allow_duplicates` | `bool`   | `false`       | no       | set to `true` to allow posts with identical post_name |
+| `$update_if_exists` | `bool`   | `false`       | no       | set to `true` to overwrite existing ACF post with new post_meta (sets of fields to be edited in the back-end)
